@@ -28,13 +28,14 @@ uint32_t readSalt()
 }
 
 // READ Soil
-uint16_t readSoil()
+float readSoil()
 {
   Serial.println(soil_max);
   uint16_t soil = analogRead(SOIL_PIN);
   Serial.print("Soil before map: ");
   Serial.println(soil);
-  return map(soil, soil_min, soil_max, 100, 0);
+  float soil_norm = -0.05 * (float(soil) - float(soil_min)) + 100.0;
+  return soil_norm;
 }
 
 float readSoilTemp()

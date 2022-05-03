@@ -8,7 +8,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include <PubSubClient.h>
-#include <Esp.h>
+#include <ESP.h>
 #include <time.h>
 #include <TimeLib.h>
 
@@ -154,15 +154,6 @@ void setup()
   }
 
 #include <time-management.h>
-  //#include <battChargeDays.h>
-  if (dht_found)
-  {
-    dht.begin();
-  }
-  else
-  {
-    Serial.println(F("Could not find a valid DHT sensor, check if there is one present on board!"));
-  }
 
   //! Sensor power control pin , use deteced must set high
   pinMode(POWER_CTRL, OUTPUT);
@@ -172,7 +163,7 @@ void setup()
   bool wireOk = Wire.begin(I2C_SDA, I2C_SCL); // wire can not be initialized at beginng, the bus is busy
   if (wireOk)
   {
-    Serial.println(F("Wire ok"));
+    Serial.println(F("I2C Wire ok"));
     if (logging)
     {
       writeFile(SPIFFS, "/error.log", "Wire Begin OK! \n");
@@ -190,12 +181,13 @@ void setup()
   }
   else
   {
+    Serial.println(F("BMP280(temp, humidity, baro) sensor found"));
     bme_found = true;
   }
 
   if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE))
   {
-    Serial.println(F("BH1750 Advanced begin"));
+    Serial.println(F("BH1750 light sensor found"));
   }
   else
   {
@@ -228,32 +220,13 @@ void setup()
     config.pressure = bme_pressure;
   }
 
-  uint16_t soil = readSoil();
+  float soil = readSoil();
   config.soil = soil;
   float soilTemp = readSoilTemp();
   config.soilTemp = soilTemp;
 
   uint32_t salt = readSalt();
   config.salt = salt;
-  String advice;
-  if (salt < 201)
-  {
-    advice = "needed";
-  }
-  else if (salt < 251)
-  {
-    advice = "low";
-  }
-  else if (salt < 351)
-  {
-    advice = "optimal";
-  }
-  else if (salt > 350)
-  {
-    advice = "too high";
-  }
-  Serial.println(advice);
-  config.saltadvice = advice;
 
   // Battery status, and charging status and days.
   float bat = readBattery();

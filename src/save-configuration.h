@@ -43,7 +43,6 @@ void saveConfiguration(const Config & config) {
   plant["soil"] = config.soil;
   plant["soilTemp"] = config.soilTemp;
   plant["salt"] = config.salt;
-  plant["saltadvice"] = config.saltadvice;
   plant["bat"] = config.bat;
   plant["batcharge"] = config.batcharge;
   plant["batchargeDate"] = config.batchargeDate;

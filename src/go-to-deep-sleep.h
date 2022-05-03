@@ -11,11 +11,16 @@ void goToDeepSleep()
   WiFi.mode(WIFI_OFF);
   btStop();
 
+  pinMode(led, OUTPUT);
+  digitalWrite(led, 1);
+
   // Configure the timer to wake us up!
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
-  // Testpurposes
-  //esp_sleep_enable_timer_wakeup(10 * uS_TO_S_FACTOR);
+  // Configure wakeup button callback!
+  esp_sleep_enable_ext1_wakeup(GPIO_SEL_35, ESP_EXT1_WAKEUP_ALL_LOW);
+
+  delay(1000);
 
   if (logging)
   {
@@ -45,6 +50,10 @@ void goToDeepSleepFiveMinutes()
   // Configure the timer to wake us up!
   ++sleep5no;
   esp_sleep_enable_timer_wakeup(300 * uS_TO_S_FACTOR);
+  // Configure wakeup button callback!
+  esp_sleep_enable_ext1_wakeup(GPIO_SEL_35, ESP_EXT1_WAKEUP_ALL_LOW);
+
+  delay(1000);
 
   // Go to sleep! Zzzz
   esp_deep_sleep_start();
